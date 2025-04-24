@@ -3,7 +3,13 @@ package com.aston.frontendpracticeservice.service;
 import com.aston.frontendpracticeservice.domain.entity.User;
 import com.aston.frontendpracticeservice.security.JwtAuthentication;
 import com.aston.frontendpracticeservice.security.Role;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.JwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.SignatureException;
+import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.NonNull;
@@ -16,6 +22,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -44,9 +51,15 @@ public class JwtService {
                 .setSubject(user.getLogin())
                 .setExpiration(accessExpiration)
                 .signWith(getSignKey())
-                .claim("roles", user.getRoles())
+                .claim("roles", extractRoles(user))
                 .claim("login", user.getLogin())
                 .compact();
+    }
+
+    private Set<String> extractRoles(User user) {
+        return user.getUserRoles().stream()
+                .map(ur -> ur.getRole().name())
+                .collect(Collectors.toSet());
     }
 
     public String generateRefreshToken(@NonNull User user) {
@@ -95,9 +108,9 @@ public class JwtService {
                     .build().parseClaimsJws(token);
             return true;
         } catch (ExpiredJwtException
-        | UnsupportedJwtException
-        | MalformedJwtException
-        | SignatureException e) {
+                 | UnsupportedJwtException
+                 | MalformedJwtException
+                 | SignatureException e) {
             throw new JwtException("Incorrect jwt token");
         }
     }
@@ -109,8 +122,9 @@ public class JwtService {
 
     public JwtAuthentication generate(Claims claims) {
         String login = claims.getSubject();
-        Set<Role> roles = claims.get("roles", Set.class);
-        new JwtAuthentication(true, login, roles);
+        Role role = Role.valueOf(claims.get("roles", String.class));
+        new JwtAuthentication(true, login, Set.of(role));
         return null;
     }
+
 }

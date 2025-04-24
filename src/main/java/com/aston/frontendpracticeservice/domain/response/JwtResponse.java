@@ -9,4 +9,5 @@ public record JwtResponse(String accessToken, String refreshToken) {
     @Builder
     public JwtResponse {
     }
+
 }

@@ -1,0 +1,49 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis Siliukov
+      preConditions:
+        - not:
+            tableExists:
+              tableName: user_roles
+      changes:
+        - createTable:
+            tableName: user_roles
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    constraintName: pk_user_roles_id
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: role
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - checkConstraint:
+                  constraintName: ch_user_roles_role
+                  violatedErrorMessage: "Role must be either USER or ADMIN"
+                  column:
+                    name: role
+                    checks:
+                      - in:
+                          valueSet:
+                            - 'ADMIN'
+                            - 'USER'
+        - addForeignKeyConstraint:
+            baseTableName: user_roles
+            baseColumnNames: user_id
+            constraintName: fk_user_roles_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
+        - addUniqueConstraint:
+            tableName: user_roles
+            columnNames: user_id, role
+            constraintName: uq_user_roles_user_role
