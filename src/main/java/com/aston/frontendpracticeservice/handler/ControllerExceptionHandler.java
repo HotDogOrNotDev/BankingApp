@@ -42,4 +42,5 @@ public class ControllerExceptionHandler {
     protected SimpleMessage handleJwtException(JwtException exception) {
         return new SimpleMessage(exception.getMessage());
     }
+
 }
