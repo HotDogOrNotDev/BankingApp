@@ -1,0 +1,16 @@
+spring:
+  profiles:
+    active: dev
+  liquibase:
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+
+jwt:
+  secret: ${JWT_SECRET}
+
+auth:
+  refresh_token_life_seconds: 60
+  access_token_life_seconds: 1

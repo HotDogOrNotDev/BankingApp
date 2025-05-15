@@ -41,4 +41,5 @@ public class ImageService {
 
         return new ByteArrayResource(bytes);
     }
+
 }

@@ -1,40 +1,13 @@
 package com.aston.frontendpracticeservice.repository;
 
 import com.aston.frontendpracticeservice.domain.entity.User;
-import jakarta.annotation.PostConstruct;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
+public interface UserRepository extends JpaRepository<User, UUID> {
 
-/**
- * Mock repository
- */
-@Component
-public class UserRepository {
+    Optional<User> findByLogin(String login);
 
-    @Value("${auth.default_login}")
-    private String defaultLogin;
-
-    @Value("${auth.default_password}")
-    private String defaultPassword;
-
-    private List<User> users = new ArrayList<>();
-
-    @PostConstruct
-    public void initDefaultUser() {
-        users.add(User.builder()
-                .login(defaultLogin)
-                .password(defaultPassword)
-                .build());
-    }
-
-    public Optional<User> findByLogin(String login) {
-        return users.stream()
-                .filter(user -> login.equals(user.getLogin()))
-                .findFirst();
-    }
 }

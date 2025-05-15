@@ -1,23 +1,28 @@
-version: "3"
+version: '3.8'
 
 services:
-  credit-service:
-    container_name: $CI_PROJECT_NAME
-    image: $AND_DOCKER_REGISTRY_NAME/$PROGECT-$APP:$CI_COMMIT_SHA
+  postgres:
+    image: postgres:latest
+    container_name: postgres-db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     ports:
-      - 9002:8080
-    restart: always
-    volumes:
-      - /logs/credit:/logs
+      - "5432:5432"
     networks:
       - a-tink-test
-    deploy:
-      resources:
-        limits:
-          cpus: "0.5"
-          memory: "512M"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:
   a-tink-test:
-    external: true
     driver: bridge
+
+volumes:
+  postgres_data:

@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/scripts/v1/2025-04-28-user-table.yaml
+  - include:
+      file: db/changelog/scripts/v1/2025-04-28-user-roles.yaml
