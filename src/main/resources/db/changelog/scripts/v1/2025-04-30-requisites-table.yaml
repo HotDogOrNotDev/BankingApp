@@ -1,0 +1,61 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis Siliukov
+      preConditions:
+        - not:
+            tableExists:
+              tableName: requisites
+      changes:
+        - createTable:
+            tableName: requisites
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+              - column:
+                  name: account_number
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: bik
+                  type: varchar(9)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: correspondent_account
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: inn
+                  type: varchar(12)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kpp
+                  type: varchar(9)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: kbk
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+        - addPrimaryKey:
+            constraintName: pk_requisites_id
+            tableName: requisites
+            columnNames: id
+        - addForeignKeyConstraint:
+            baseTableName: requisites
+            baseColumnNames: user_id
+            constraintName: fk_requisites_user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            onDelete: CASCADE
