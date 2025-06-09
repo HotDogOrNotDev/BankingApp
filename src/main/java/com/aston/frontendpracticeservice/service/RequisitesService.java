@@ -1,20 +1,17 @@
 package com.aston.frontendpracticeservice.service;
 
-import com.aston.frontendpracticeservice.repository.RequisitesRepository;
-import com.aston.frontendpracticeservice.repository.projection.RequisitesProjection;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import com.aston.frontendpracticeservice.controller.dto.RequisitesCreateDto;
+import com.aston.frontendpracticeservice.controller.dto.RequisitesShortDto;
 
 import java.util.List;
+import java.util.UUID;
 
-@Service
-@RequiredArgsConstructor
-public class RequisitesService {
+public interface RequisitesService {
 
-    private final RequisitesRepository requisitesRepository;
+    List<RequisitesShortDto> getAllRequisites();
 
-    public List<RequisitesProjection> getAllRequisites() {
-        return requisitesRepository.findAllBy();
-    }
+    RequisitesShortDto create(RequisitesCreateDto dto);
+
+    void deleteRequisite(UUID id);
 
 }
