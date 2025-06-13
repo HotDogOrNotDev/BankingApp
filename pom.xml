@@ -20,6 +20,7 @@
         <spring.boot.version>3.2.2</spring.boot.version>
         <lombok.version>1.18.30</lombok.version>
         <testcontainers.version>1.19.3</testcontainers.version>
+        <logstash.version>7.2</logstash.version>
         <liquibase.version>4.25.0</liquibase.version>
         <postgresql.version>42.6.0</postgresql.version>
         <jjwt.version>0.11.5</jjwt.version>
@@ -51,6 +52,13 @@
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
             <optional>true</optional>
+        </dependency>
+
+        <!-- Logstash -->
+        <dependency>
+            <groupId>net.logstash.logback</groupId>
+            <artifactId>logstash-logback-encoder</artifactId>
+            <version>${logstash.version}</version>
         </dependency>
 
         <!-- Spring Data JPA -->

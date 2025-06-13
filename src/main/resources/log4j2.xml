@@ -1,13 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Configuration status="WARN">
     <Appenders>
+
+        <!-- Консольный логгер (для дебага) -->
         <Console name="Console" target="SYSTEM_OUT">
             <PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n"/>
         </Console>
+
+        <!-- Отправка логов в Logstash по TCP -->
+        <Socket name="Logstash" host="logstash" port="5045">
+            <JsonLayout compact="true" eventEol="true" includeTimeMillis="true">
+                <KeyValuePair key="application" value="dao-layer"/>
+                <KeyValuePair key="environment" value="development"/>
+            </JsonLayout>
+        </Socket>
     </Appenders>
+
     <Loggers>
-        <Root level="info">
+        <Root level="INFO">
             <AppenderRef ref="Console"/>
+            <AppenderRef ref="Logstash"/>
         </Root>
     </Loggers>
 </Configuration>
