@@ -25,3 +25,6 @@ auth:
 logging:
   level:
     com.aston: INFO
+
+server:
+  port: 9002
