@@ -59,3 +59,10 @@ databaseChangeLog:
             referencedTableName: users
             referencedColumnNames: id
             onDelete: CASCADE
+        - addForeignKeyConstraint:
+            baseTableName: requisites
+            baseColumnNames: account_number
+            constraintName: fk_requisites_account_number
+            referencedTableName: accounts
+            referencedColumnNames: acc_number
+            onDelete: CASCADE
