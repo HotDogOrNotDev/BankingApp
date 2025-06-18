@@ -96,4 +96,5 @@ public class UserServiceIntegrationTest extends TestContainerConfig {
         userRole.setUser(user);
         return userRole;
     }
+
 }

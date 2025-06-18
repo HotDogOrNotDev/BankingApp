@@ -1,0 +1,29 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis Siliukov
+      changes:
+        - createIndex:
+            indexName: idx_transfers_from_acc
+            tableName: transfers
+            columns:
+              - column:
+                  name: from_acc
+        - createIndex:
+            indexName: idx_transfers_to_acc
+            tableName: transfers
+            columns:
+              - column:
+                  name: to_acc
+        - createIndex:
+            indexName: idx_transfers_time
+            tableName: transfers
+            columns:
+              - column:
+                  name: transfer_time
+        - createIndex:
+            indexName: idx_requisites_account
+            tableName: requisites
+            columns:
+              - column:
+                  name: account_number

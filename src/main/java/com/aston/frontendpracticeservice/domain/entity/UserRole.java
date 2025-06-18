@@ -2,7 +2,6 @@ package com.aston.frontendpracticeservice.domain.entity;
 
 
 import com.aston.frontendpracticeservice.security.Role;
-import com.aston.frontendpracticeservice.domain.entity.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
