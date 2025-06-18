@@ -1,0 +1,54 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis Siliukov
+      preConditions:
+        - not:
+            tableExists:
+              tableName: transfers
+      changes:
+        - createTable:
+            tableName: transfers
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: from_acc
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transfers_from_account
+                    references: accounts(acc_number)
+              - column:
+                  name: to_acc
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_transfers_to_account
+                    references: accounts(acc_number)
+              - column:
+                  name: amount
+                  type: numeric(19,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: transfer_time
+                  type: timestamp
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fraud_checked
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false
+              - column:
+                  name: fraud_detected
+                  type: boolean
+                  defaultValueBoolean: false
+                  constraints:
+                    nullable: false

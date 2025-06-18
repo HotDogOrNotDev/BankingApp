@@ -1,0 +1,104 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis Siliukov
+      changes:
+        # USERS
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, value: "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" }
+              - column: { name: first_name, value: "Ivan" }
+              - column: { name: last_name, value: "Ivanov" }
+              - column: { name: birth_date, value: "1990-01-01" }
+              - column: { name: inn, value: "123456789012" }
+              - column: { name: snils, value: "12345678901" }
+              - column: { name: passport_number, value: "123456789" }
+              - column: { name: login, value: "ivan" }
+              - column: { name: password, value: "password" }
+        - insert:
+            tableName: users
+            columns:
+              - column: { name: id, value: "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e" }
+              - column: { name: first_name, value: "Petr" }
+              - column: { name: last_name, value: "Petrov" }
+              - column: { name: birth_date, value: "1985-05-05" }
+              - column: { name: inn, value: "987654321098" }
+              - column: { name: snils, value: "10987654321" }
+              - column: { name: passport_number, value: "987654321" }
+              - column: { name: login, value: "petr" }
+              - column: { name: password, value: "password" }
+
+        # USER ROLES
+        - insert:
+            tableName: user_roles
+            columns:
+              - column: { name: id, value: "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f" }
+              - column: { name: user_id, value: "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" }
+              - column: { name: role, value: "ADMIN" }
+        - insert:
+            tableName: user_roles
+            columns:
+              - column: { name: id, value: "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f8a" }
+              - column: { name: user_id, value: "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e" }
+              - column: { name: role, value: "USER" }
+
+        # ACCOUNTS
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: acc_number, value: "ACC1234567" }
+              - column: { name: money, value: "100000.00" }
+              - column: { name: blocked, valueBoolean: false }
+        - insert:
+            tableName: accounts
+            columns:
+              - column: { name: acc_number, value: "ACC7654321" }
+              - column: { name: money, value: "50000.00" }
+              - column: { name: blocked, valueBoolean: false }
+
+        # REQUISITES
+        - insert:
+            tableName: requisites
+            columns:
+              - column: { name: id, value: "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8a9b" }
+              - column: { name: account_number, value: "ACC1234567" }
+              - column: { name: bik, value: "044525225" }
+              - column: { name: correspondent_account, value: "30101810400000000225" }
+              - column: { name: inn, value: "123456789012" }
+              - column: { name: kpp, value: "123456789" }
+              - column: { name: kbk, value: "18210102010011000110" }
+              - column: { name: user_id, value: "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d" }
+        - insert:
+            tableName: requisites
+            columns:
+              - column: { name: id, value: "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f8a9b0c" }
+              - column: { name: account_number, value: "ACC7654321" }
+              - column: { name: bik, value: "044525225" }
+              - column: { name: correspondent_account, value: "30101810400000000225" }
+              - column: { name: inn, value: "987654321098" }
+              - column: { name: kpp, value: "987654321" }
+              - column: { name: kbk, value: "18210102010011000110" }
+              - column: { name: user_id, value: "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e" }
+
+        # TRANSFERS
+        - insert:
+            tableName: transfers
+            columns:
+              - column: { name: id, value: "a7b8c9d0-e1f2-4a3b-4c5d-6e7f8a9b0c1d" }
+              - column: { name: from_acc, value: "ACC1234567" }
+              - column: { name: to_acc, value: "ACC7654321" }
+              - column: { name: amount, value: "1000.00" }
+              - column: { name: transfer_time, value: "2024-06-14T10:00:00" }
+              - column: { name: fraud_checked, valueBoolean: false }
+              - column: { name: fraud_detected, valueBoolean: false }
+        - insert:
+            tableName: transfers
+            columns:
+              - column: { name: id, value: "b8c9d0e1-f2a3-4b4c-5d6e-7f8a9b0c1d2e" }
+              - column: { name: from_acc, value: "ACC7654321" }
+              - column: { name: to_acc, value: "ACC1234567" }
+              - column: { name: amount, value: "500.00" }
+              - column: { name: transfer_time, value: "2024-06-14T11:00:00" }
+              - column: { name: fraud_checked, valueBoolean: true }
+              - column: { name: fraud_detected, valueBoolean: false }

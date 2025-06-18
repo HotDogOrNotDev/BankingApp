@@ -24,7 +24,7 @@ public class RequisitesMapperTest {
 
         Requisites entity = requisitesMapper.toEntity(dto, user);
 
-        assertThat(entity.getAccountNumber()).isEqualTo(dto.accountNumber());
+        assertThat(entity.getAccount().getAccNumber()).isEqualTo(dto.accountNumber());
         assertThat(entity.getBik()).isEqualTo(dto.bik());
         assertThat(entity.getCorrespondentAccount()).isEqualTo(dto.correspondentAccount());
         assertThat(entity.getInn()).isEqualTo(dto.inn());
@@ -58,4 +58,5 @@ public class RequisitesMapperTest {
                 .userId(userId)
                 .build();
     }
+
 }
