@@ -20,11 +20,67 @@ services:
       timeout: 5s
       retries: 5
 
-  redis:
+  redis-cache:
     image: redis:latest
     container_name: redis-cache
     ports:
       - "6379:6379"
+    networks:
+      - a-tink-test
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9
+    container_name: elasticsearch
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms1g -Xmx1g" # Минимум 1 Гб
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    networks:
+      - a-tink-test
+    volumes:
+      - esdata:/usr/share/elasticsearch/data
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s http://localhost:9200 >/dev/null || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.17.9
+    container_name: logstash
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5045:5045"
+      - "9600:9600"
+    volumes:
+      - ./logstash/config/pipeline.conf:/usr/share/logstash/pipeline/pipeline.conf
+    environment:
+      - LOGSTASH_CONF_INCLUDE=/usr/share/logstash/pipeline/
+      - "LS_JAVA_OPTS=-Xms256m -Xmx256m"  # Ограничиваем память
+    networks:
+      - a-tink-test
+    healthcheck:
+      test: [ "CMD-SHELL", "curl -s http://localhost:9600 >/dev/null || exit 1" ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.17.9
+    container_name: kibana
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    ports:
+      - "5601:5601"
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+      - "NODE_OPTIONS=--max-old-space-size=512"  # Ограничиваем память
     networks:
       - a-tink-test
 
@@ -34,3 +90,4 @@ networks:
 
 volumes:
   postgres_data:
+  esdata:

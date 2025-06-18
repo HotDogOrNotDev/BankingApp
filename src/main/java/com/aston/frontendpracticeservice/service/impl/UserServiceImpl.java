@@ -16,7 +16,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public User findByLogin(String login) {
         return userRepository.findByLogin(login)
-                .orElseThrow(() -> new UserNotFoundException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException(login));
     }
 
 }

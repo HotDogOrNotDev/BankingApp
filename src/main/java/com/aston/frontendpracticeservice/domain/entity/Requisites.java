@@ -16,6 +16,8 @@ import lombok.Setter;
 import java.util.UUID;
 
 @Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -26,7 +28,10 @@ public class Requisites {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
-    private String accountNumber;
+    @OneToOne
+    @JoinColumn(name = "account_number", referencedColumnName = "accNumber")
+    private Account account;
+
     private String bik;
     private String correspondentAccount;
     private String inn;
@@ -36,69 +41,5 @@ public class Requisites {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
-
-    public UUID getId() {
-        return id;
-    }
-
-    public void setId(UUID id) {
-        this.id = id;
-    }
-
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public void setAccountNumber(String accountNumber) {
-        this.accountNumber = accountNumber;
-    }
-
-    public String getBik() {
-        return bik;
-    }
-
-    public void setBik(String bik) {
-        this.bik = bik;
-    }
-
-    public String getCorrespondentAccount() {
-        return correspondentAccount;
-    }
-
-    public void setCorrespondentAccount(String correspondentAccount) {
-        this.correspondentAccount = correspondentAccount;
-    }
-
-    public String getInn() {
-        return inn;
-    }
-
-    public void setInn(String inn) {
-        this.inn = inn;
-    }
-
-    public String getKpp() {
-        return kpp;
-    }
-
-    public void setKpp(String kpp) {
-        this.kpp = kpp;
-    }
-
-    public String getKbk() {
-        return kbk;
-    }
-
-    public void setKbk(String kbk) {
-        this.kbk = kbk;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
 }
