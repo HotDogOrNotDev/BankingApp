@@ -1,6 +1,37 @@
 spring:
   profiles:
     active: dev
+  kafka:
+    bootstrap-servers: localhost:9092
+    topic: puppetTopic
+    ssl:
+      key-store-location: classpath:kafka.keystore.jks
+      key-store-password: ${KAFKA_SSL_KEYSTORE_PASSWORD}
+      trust-store-location: classpath:kafka.truststore.jks
+      trust-store-password: ${KAFKA_SSL_TRUSTSTORE_PASSWORD}
+      key-password: ${KAFKA_SSL_KEY_PASSWORD}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      security.protocol: SSL
+      properties:
+        acks: all
+        retries: 5
+        retry.backoff.ms: 1000
+        request.timeout.ms: 30000
+        enable.idempotence: true
+        compression.type: gzip
+
+    consumer:
+      group-id: puppet-group
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      auto-offset-reset: earliest
+      security.protocol: SSL
+      properties:
+        enable.auto.commit: true
+        spring.json.trusted.packages: "*"
+
   liquibase:
     change-log: classpath:db/changelog/db.changelog-master.yaml
   jpa:
