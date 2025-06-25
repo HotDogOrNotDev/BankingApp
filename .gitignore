@@ -31,3 +31,16 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Secrets and sensitive files
+*.jks
+*.creds
+.env
+*.log
+*.tmp
+*.swp
+*.swo
+
+# Local config / cache
+.DS_Store
+Thumbs.db
