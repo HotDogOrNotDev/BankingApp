@@ -3,12 +3,14 @@ package com.aston.frontendpracticeservice.handler;
 import com.aston.frontendpracticeservice.domain.response.SimpleMessage;
 import com.aston.frontendpracticeservice.exception.AuthException;
 import com.aston.frontendpracticeservice.exception.UserNotFoundException;
+import com.aston.frontendpracticeservice.handler.dto.ErrorResponse;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.InvalidMediaTypeException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.context.request.WebRequest;
 
 @RestControllerAdvice
 public class ControllerExceptionHandler {
@@ -41,6 +43,12 @@ public class ControllerExceptionHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     protected SimpleMessage handleJwtException(JwtException exception) {
         return new SimpleMessage(exception.getMessage());
+    }
+
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    protected ErrorResponse handleAllExceptions(Exception ex, WebRequest request) {
+        return new ErrorResponse(500, ex.getMessage());
     }
 
 }
