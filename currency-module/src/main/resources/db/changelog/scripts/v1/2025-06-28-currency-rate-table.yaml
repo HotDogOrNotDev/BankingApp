@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: Denis Siliukov
+      preConditions:
+        - not:
+            tableExists:
+              tableName: currency_rate
+      changes:
+        - createTable:
+            tableName: currency_rate
+            columns:
+              - column:
+                  name: id
+                  type: uuid
+                  defaultValueComputed: "gen_random_uuid()"
+                  constraints:
+                    primaryKey: true
+                    primaryKeyName: pk_currency_rate
+                    nullable: false
+              - column:
+                  name: date
+                  type: date
+                  constraints:
+                    nullable: false
+              - column:
+                  name: cbr_id
+                  type: varchar(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: num_code
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: char_code
+                  type: varchar(10)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: nominal
+                  type: integer
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(100)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: value
+                  type: numeric(15,6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: vunit_rate
+                  type: numeric(15,8)
+                  constraints:
+                    nullable: false
+        - addUniqueConstraint:
+            tableName: currency_rate
+            columnNames: date, char_code
+            constraintName: uq_currency_rate_date_char_code
