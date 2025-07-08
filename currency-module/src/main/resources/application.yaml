@@ -1,0 +1,25 @@
+server:
+  port: 8081
+
+spring:
+  r2dbc:
+    url: ${DB_URL_R2DBC}
+    username: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    user: ${POSTGRES_USER}
+    password: ${POSTGRES_PASSWORD}
+    url: ${DB_URL_JDBC}
+
+logging:
+  level:
+    org.liquibase: DEBUG
+
+cbr:
+  url: ${CBR_URL}
+
+currency:
+  rate:
+    update-period: PT12H

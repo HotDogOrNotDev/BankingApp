@@ -21,39 +21,77 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
+        stage('Build Docker Image main-app') {
             steps {
                 script {
                     try {
-                        updateGitlabCommitStatus name: 'docker', state: 'running'
-                        def dockerImage = docker.build("dao-layer:${BUILD_NUMBER}")
-                        dockerImage.tag('latest')
-                        updateGitlabCommitStatus name: 'docker', state: 'success'
+                        updateGitlabCommitStatus name: 'docker-main-app', state: 'running'
+                        def dockerImageMain = docker.build("main-app:${BUILD_NUMBER}", "main-app/")
+                        dockerImageMain.tag('latest')
+                        updateGitlabCommitStatus name: 'docker-main-app', state: 'success'
                     } catch (Exception e) {
-                        updateGitlabCommitStatus name: 'docker', state: 'failed'
-                        error "Error building Docker image: ${e.message}"
+                        updateGitlabCommitStatus name: 'docker-main-app', state: 'failed'
+                        error "Error building main-app Docker image: ${e.message}"
                     }
                 }
             }
         }
 
-        stage('Run Docker Container') {
+        stage('Build Docker Image currency-module') {
             steps {
                 script {
                     try {
-                        updateGitlabCommitStatus name: 'deploy', state: 'running'
+                        updateGitlabCommitStatus name: 'docker-currency-module', state: 'running'
+                        def dockerImageCurrency = docker.build("currency-module:${BUILD_NUMBER}", "currency-module/")
+                        dockerImageCurrency.tag('latest')
+                        updateGitlabCommitStatus name: 'docker-currency-module', state: 'success'
+                    } catch (Exception e) {
+                        updateGitlabCommitStatus name: 'docker-currency-module', state: 'failed'
+                        error "Error building currency-module Docker image: ${e.message}"
+                    }
+                }
+            }
+        }
+
+        stage('Run Docker Container main-app') {
+            steps {
+                script {
+                    try {
+                        updateGitlabCommitStatus name: 'deploy-main-app', state: 'running'
                         sh '''
-                            docker stop dao-layer || true
-                            docker rm dao-layer || true
-                            docker run -d --name dao-layer \
+                            docker stop main-app || true
+                            docker rm main-app || true
+                            docker run -d --name main-app \
                                 -p 9002:9002 \
                                 --restart unless-stopped \
-                                dao-layer:latest
+                                main-app:latest
                         '''
-                        updateGitlabCommitStatus name: 'deploy', state: 'success'
+                        updateGitlabCommitStatus name: 'deploy-main-app', state: 'success'
                     } catch (Exception e) {
-                        updateGitlabCommitStatus name: 'deploy', state: 'failed'
-                        error "Error running container: ${e.message}"
+                        updateGitlabCommitStatus name: 'deploy-main-app', state: 'failed'
+                        error "Error running main-app container: ${e.message}"
+                    }
+                }
+            }
+        }
+
+        stage('Run Docker Container currency-module') {
+            steps {
+                script {
+                    try {
+                        updateGitlabCommitStatus name: 'deploy-currency-module', state: 'running'
+                        sh '''
+                            docker stop currency-module || true
+                            docker rm currency-module || true
+                            docker run -d --name currency-module \
+                                -p 8081:8081 \
+                                --restart unless-stopped \
+                                currency-module:latest
+                        '''
+                        updateGitlabCommitStatus name: 'deploy-currency-module', state: 'success'
+                    } catch (Exception e) {
+                        updateGitlabCommitStatus name: 'deploy-currency-module', state: 'failed'
+                        error "Error running currency-module container: ${e.message}"
                     }
                 }
             }
@@ -67,17 +105,22 @@ pipeline {
         failure {
             updateGitlabCommitStatus name: 'pipeline', state: 'failed'
             sh '''
-                docker stop dao-layer || true
-                docker rm dao-layer || true
+                docker stop main-app || true
+                docker rm main-app || true
+                docker stop currency-module || true
+                docker rm currency-module || true
             '''
         }
         always {
             sh '''
-                docker stop dao-layer || true
-                docker rm dao-layer || true
+                docker stop main-app || true
+                docker rm main-app || true
+                docker stop currency-module || true
+                docker rm currency-module || true
 
                 docker image prune -f
-                docker images -q dao-layer | grep -v "$(docker inspect --format='{{range .RepoTags}} {{.}} {{end}}' dao-layer | grep latest)" | xargs -r docker rmi -f || true
+                docker images -q main-app | grep -v "$(docker inspect --format='{{range .RepoTags}} {{.}} {{end}}' main-app | grep latest)" | xargs -r docker rmi -f || true
+                docker images -q currency-module | grep -v "$(docker inspect --format='{{range .RepoTags}} {{.}} {{end}}' currency-module | grep latest)" | xargs -r docker rmi -f || true
             '''
         }
     }

@@ -35,7 +35,7 @@ build/
 # Secrets and sensitive files
 *.jks
 *.creds
-.env
+main-app/.env
 *.log
 *.tmp
 *.swp
@@ -44,3 +44,4 @@ build/
 # Local config / cache
 .DS_Store
 Thumbs.db
+/currency-module/.env
