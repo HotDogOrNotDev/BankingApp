@@ -35,6 +35,9 @@ build/
 # Secrets and sensitive files
 *.jks
 *.creds
+/ssl/
+/main-app/ssl/
+/temp-repo/
 main-app/.env
 *.log
 *.tmp

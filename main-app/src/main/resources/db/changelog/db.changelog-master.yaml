@@ -13,3 +13,5 @@ databaseChangeLog:
       file: db/changelog/scripts/v1/2025-06-14-idx-transfers-from-accounts.yaml
   - include:
       file: db/changelog/scripts/v1/2025-06-15-default-data.yaml
+  - include:
+      file: db/changelog/scripts/v1/2026-10-25-hash-seed-passwords.yaml

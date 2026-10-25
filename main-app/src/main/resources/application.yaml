@@ -50,8 +50,8 @@ jwt:
   secret: ${JWT_SECRET}
 
 auth:
-  refresh_token_life_seconds: 60
-  access_token_life_seconds: 1
+  refresh_token_life_seconds: 604800
+  access_token_life_seconds: 900
 
 logging:
   level:

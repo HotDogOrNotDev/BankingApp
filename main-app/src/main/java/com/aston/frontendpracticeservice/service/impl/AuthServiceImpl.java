@@ -9,6 +9,7 @@ import com.aston.frontendpracticeservice.service.JwtService;
 import com.aston.frontendpracticeservice.service.UserService;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -23,13 +24,14 @@ public class AuthServiceImpl implements AuthService {
 
     private final UserService userService;
     private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
     private final Map<String, String> refreshStorage = new ConcurrentHashMap<>();
 
     @Override
     public JwtResponse authAndGetToken(AuthRequest authRequest) {
         final User user = userService.findByLogin(authRequest.login());
 
-        if (!user.getPassword().equals(authRequest.password())) {
+        if (!passwordEncoder.matches(authRequest.password(), user.getPassword())) {
             throw new AuthException(INCORRECT_PASSWORD);
         }
 
